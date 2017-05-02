@@ -1,5 +1,3 @@
-player =0
-
 def board():
     d={}
     for n in range(1,10):
@@ -9,70 +7,35 @@ def board():
 def printBoard(d):
     for k,v in d.items():
         if int(k)%3==0:
-            print(k,v, end=" ")
+            print(v, end=" ")
             print("\n")
         else:
-            print(k,v, end=" ")
+            print(v, end=" ")
 
-def checkInput():
-    x=input("Enter postion(only number from 1-9): ")
-    while True:
-        try:
-            x=int(x)
-            if 1<= x <=9:
-                break
-            else:
-                x=int(input("Please enter correct number(only number from 1-9): "))
-        except ValueError:
-            print("Enter number please")
-            x=int(input("Please enter correct number(only number from 1-9): "))
-    return int(x)
-        
-def process(d):
-    global player
-    won =0
+def checkInput(d): # take input and check if the input is valid
     
-    x=checkInput()
-         
-    if player == 0:
-        y="O"
-        d[x]=y
-        player = 1
-        won = check(d,x)
-        if won ==1:
-            print("tie")
-        elif won ==2:
-            print("Player1 won")
-        elif won ==3:
-            print("Player2 won")
-        else:
-            printBoard(d)
-            process(d)
+    x=""
+    # try: # check if the input is a number
+    #     x=int(x)
+    # except ValueError:
+    #     print("Enter number please")
+    
+    while x not in '1 2 3 4 5 6 7 8 9'.split() or not checkSingle(d,int(x)):  # check if the number is in the range of 1 to 9
+            x=input("Please enter correct number(only number from 1-9): ")
+    
+    return int(x)
 
-    else:
-        y="X"
-        d[x]=y
-        player = 0
-        won = check(d,x)
-        if won ==1:
-            print("tie")
-        elif won ==2:
-            print("Player1 won")
-        elif won ==3:
-            print("Player2 won")
-        else:
-            printBoard(d)
-            process(d)
+def checkSingle(d,x): # check if the space has been filled
+    return d[x] == "-"
 
-
-def check(d,n):
-    contorl=0
-    sumnum=0
-    sv0=0
-    sh0=0
-    sd0=0
+def checkWon(d,n):
+    contorl=0 # 0 for ongoing, 1 for tie, 2 for player1 won, 3 for player3 won
+    sumnum=0 # tie counter
+    sv0=0 # player1 vertical counter
+    sh0=0 # player1 horizonal counter
+    sd0=0 # player1 dignose counter
     sv1=0
-    sh1=0
+    sh1=0 
     sd1=0
             
     if n >3 and n<7:
@@ -180,20 +143,63 @@ def check(d,n):
     if sumnum ==9:
         control = 1
         return control    
-        
     
+def process(d,player):
+    won =0
+    
+    x=checkInput(d)
+    print("Player",(player+1),"selected position",x) 
+    if player == 0:
+        d[x]="O"
+        player = 1
+        won = checkWon(d,x)
+        if won ==1:
+            print("tie")
+        elif won ==2:
+            print("Player1 won")
+        elif won ==3:
+            print("Player2 won")
+        else:
+            printBoard(d)
+            process(d,player)
 
-def main():
-    global player
-    d = board()
-    printBoard(d)
-    process(d)
-    printBoard(d)
-    x = input("Do you want to play again(y/n): ")
-    if x =="y":
+    else:
+        d[x]="X"
+        player = 0
+        won = checkWon(d,x)
+        if won ==1:
+            print("tie")
+        elif won ==2:
+            print("Player1 won")
+        elif won ==3:
+            print("Player2 won")
+        else:
+            printBoard(d)
+            process(d,player)
+
+
+
+def replay():
+    x = input("Do you want to play again(y/n): ").lower().startswith("y")
+    if  x == True:
         player =0
         main()
     else:
+        print("Bye!")
         pass
+
+def main():
+    player = 0 # set the player switch 
+    
+    d = board() # init the board
+    
+    printBoard(d) # print the blank board
+    
+    process(d,player) # game on
+    
+    printBoard(d) # print the final board
+    
+    replay() # ask if the players wnat to play next round
+
 
 main()
