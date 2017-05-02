@@ -14,11 +14,27 @@ def printBoard(d):
         else:
             print(k,v, end=" ")
 
+def checkInput():
+    x=input("Enter postion(only number from 1-9): ")
+    while True:
+        try:
+            x=int(x)
+            if 1<= x <=9:
+                break
+            else:
+                x=int(input("Please enter correct number(only number from 1-9): "))
+        except ValueError:
+            print("Enter number please")
+            x=int(input("Please enter correct number(only number from 1-9): "))
+    return int(x)
+        
 def process(d):
     global player
     won =0
+    
+    x=checkInput()
+         
     if player == 0:
-        x=int(input("Enter postion: "))
         y="O"
         d[x]=y
         player = 1
@@ -33,9 +49,7 @@ def process(d):
             printBoard(d)
             process(d)
 
-
     else:
-        x=int(input("Enter postion: "))
         y="X"
         d[x]=y
         player = 0
@@ -81,6 +95,7 @@ def check(d,n):
             return control
         if sh1==3 or sv1==3:
             control = 3
+            return control
     elif n<4:
         for e in [n+3,n+6]:
             if d[e] == "O":
@@ -169,12 +184,14 @@ def check(d,n):
     
 
 def main():
+    global player
     d = board()
     printBoard(d)
     process(d)
     printBoard(d)
     x = input("Do you want to play again(y/n): ")
     if x =="y":
+        player =0
         main()
     else:
         pass
