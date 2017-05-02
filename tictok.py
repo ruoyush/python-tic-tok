@@ -1,4 +1,5 @@
 def board():
+    print("Welcome to the tic tok toe game. Player 1 will use 'O' as mark. Player 2 will use 'X' as mark.")
     d={}
     for n in range(1,10):
         d[n]="-"
@@ -19,6 +20,7 @@ def checkInput(d): # take input and check if the input is valid
     #     x=int(x)
     # except ValueError:
     #     print("Enter number please")
+    #     continue
     
     while x not in '1 2 3 4 5 6 7 8 9'.split() or not checkSingle(d,int(x)):  # check if the number is in the range of 1 to 9
             x=input("Please enter correct number(only number from 1-9): ")
@@ -136,12 +138,16 @@ def checkWon(d,n):
     else:
         pass
 
-    for e in d.values():
-        if e !="-":
-            sumnum+=1
+    # for e in d.values():
+    #     if e !="-":
+    #         sumnum+=1
         
-    if sumnum ==9:
-        control = 1
+    if "-" not in d.values():
+        control =1
+        
+    # if sumnum ==9:
+    #     control = 1
+        
         return control    
     
 def process(d,player):
